@@ -526,3 +526,284 @@ bool showTeacherMenu(TEACHERS* teachers, int& teacherCount, int& maxTeacherID, T
 	}
 	return true;
 }
+
+void showTeams(TEAMS* teams, int& teamsCount)
+{
+	system("CLS");
+	if (teamsCount > 0)
+	{
+		cout << "Here are all the teams so far : " << endl;
+	}
+	else
+	{
+		cout << "There are no teams inserted yet. " << endl << endl
+			<< "You can insert some using the |Add a team| button of the menu." << endl << endl;
+	}
+
+	for (int j = 0; j < teamsCount; j++)
+	{
+		cout << "ID : ";
+		cout << teams[j].teamID << " | Name : "
+			<< teams[j].teamName << " | Description : "
+			<< teams[j].teamDescription << " | teacher: "
+			<< teams[j].teamTeacher.teacherName << " | frontend: "
+			<< teams[j].frontEnd.name << " | backend: "
+			<< teams[j].backEnd.name << " | QA: "
+			<< teams[j].QA.name << " | master: "
+			<< teams[j].master.name << endl;
+	}
+	cout << endl;
+}
+
+void deleteTeamMenu(TEAMS* teams, int& teamsCount, STUDENTS* students, int& studentCount, TEACHERS* teachers, int& teacherCount)
+{
+	system("CLS");
+	if (teamsCount > 0)
+	{
+
+		int deleteTeamID;
+
+		cout << "Enter the Id of the team you want to delete : ";
+		cin >> deleteTeamID;
+		deleteTeam(teams, teamsCount, deleteTeamID, students, studentCount, teachers, teacherCount);
+	}
+	else
+	{
+		cout << "There are no teams inserted yet. " << endl << endl
+			<< "You can insert some using the |Add a team| button of the menu." << endl << endl;
+	}
+
+}
+
+int showTeamsNoSchool(TEAMS* teams, int& teamCount)
+{
+	int availableTeams = 0;
+	for (int j = 0; j < teamCount; j++)
+	{
+		if (teams[j].hasSchool == false)
+		{
+			availableTeams++;
+			cout << "ID : ";
+			cout << teams[j].teamID << " | Name : "
+				<< teams[j].teamName << " | Description : "
+				<< teams[j].teamDescription << " | teacher: "
+				<< teams[j].teamTeacher.teacherName << " | frontend: "
+				<< teams[j].frontEnd.name << " | backend: "
+				<< teams[j].backEnd.name << " | QA: "
+				<< teams[j].QA.name << " | master: "
+				<< teams[j].master.name << endl;
+		}
+	}
+	if (availableTeams == 0)
+	{
+		cout << "No teams without school found" << endl << endl;
+		return 0;
+	}
+	else
+	{
+		return availableTeams;
+	}
+}
+
+
+
+void editTeamMenu(TEAMS* teams, int& teamCount, TEACHERS* teachers, int& teacherCount, STUDENTS* students, int& studentCount)
+{
+	system("CLS");
+	if (teamCount > 0)
+	{
+		int editedId;
+		cout << "Enter the ID of the team you want to change : ";
+		cin >> editedId;
+		TEAMS editName = getTeam(teams, teamCount, editedId);
+		cout << "+--------------+" << endl;
+		cout << "|--EDIT MENU-- |" << endl;
+		cout << "+--------------+" << endl;
+		cout << "|1. name       |" << endl;
+		cout << "|2. description|" << endl;
+		cout << "|3.frontend    |" << endl;
+		cout << "|4.backend     |" << endl;
+		cout << "|5.QA          |" << endl;
+		cout << "|6.master      |" << endl;
+		cout << "|7.teacher     |" << endl;
+		cout << "+--------------+" << endl;
+		string levelChoice;
+		int choice;
+		cin >> levelChoice;
+		if (checkInteger(levelChoice) == false)
+		{
+			do {
+				system("CLS");
+				cout << "+---------------------------------------------------------------------+" << endl;
+				cout << "|The value you entered was not an integer. Please enter a whole number|" << endl;
+				cout << "+---------------------------------------------------------------------+" << endl;
+				cin >> levelChoice;
+				checkInteger(levelChoice);
+			} while (checkInteger(levelChoice) == false);
+		}
+		choice = stoi(levelChoice);
+		switch (choice)
+		{
+
+		case 1:
+			system("CLS");
+			cout << " Choose a new team name : ";
+			cin >> editName.teamName;
+			updateTeam(teams, teamCount, editedId, editName);
+			break;
+
+		case 2:
+			system("CLS");
+			cout << "Choose a new team description: ";
+			cin >> editName.teamDescription;
+			updateTeam(teams, teamCount, editedId, editName);
+			break;
+		case 3:
+			if (checkAvailableStudents(students, studentCount, "frontend"))
+			{
+				system("CLS");
+				showStudentsPerRole(students, studentCount, "frontend");
+				editName.frontEnd.hasTeam = false;
+				updateStudent(students, studentCount, editName.frontEnd.studentID, editName.frontEnd);
+				cout << "which ID?";
+				int frontEndID;
+				cin >> frontEndID;
+				STUDENTS frontend = getStudent(students, studentCount, frontEndID);
+				frontend.hasTeam = true;
+				updateStudent(students, studentCount, frontEndID, frontend);
+				editName.frontEnd = frontend;
+				updateTeam(teams, teamCount, editedId, editName);
+			}
+			break;
+		case 4:
+			if (checkAvailableStudents(students, studentCount, "backend"))
+			{
+				system("CLS");
+				cout << "Which back-end developer is in the team?";
+				showStudentsPerRole(students, studentCount, "backend");
+				editName.backEnd.hasTeam = false;
+				updateStudent(students, studentCount, editName.backEnd.studentID, editName.backEnd);
+				cout << "which ID?";
+				int backEndID;
+				cin >> backEndID;
+				STUDENTS backend = getStudent(students, studentCount, backEndID);
+				backend.hasTeam = true;
+				updateStudent(students, studentCount, backEndID, backend);
+				editName.backEnd = backend;
+				updateTeam(teams, teamCount, editedId, editName);
+			}
+			break;
+		case 5:
+			if (checkAvailableStudents(students, studentCount, "QA"))
+			{
+				system("CLS");
+				cout << "Which quality engineer is in the team?";
+				showStudentsPerRole(students, studentCount, "QA");
+				editName.QA.hasTeam = false;
+				updateStudent(students, studentCount, editName.QA.studentID, editName.QA);
+				cout << "which ID?";
+				int QAID;
+				cin >> QAID;
+				STUDENTS qa = getStudent(students, studentCount, QAID);
+				qa.hasTeam = true;
+				updateStudent(students, studentCount, QAID, qa);
+				editName.QA = qa;
+				updateTeam(teams, teamCount, editedId, editName);
+			}
+			break;
+		case 6:
+			if (checkAvailableStudents(students, studentCount, "master"))
+			{
+				system("CLS");
+				cout << "Which scrum master is in the team?";
+				showStudentsPerRole(students, studentCount, "master");
+				editName.master.hasTeam = false;
+				updateStudent(students, studentCount, editName.master.studentID, editName.master);
+				cout << "which ID?";
+				int masterID;
+				cin >> masterID;
+				STUDENTS master = getStudent(students, studentCount, masterID);
+				master.hasTeam = true;
+				updateStudent(students, studentCount, masterID, master);
+				editName.master = master;
+				updateTeam(teams, teamCount, editedId, editName);
+			}
+			break;
+		case 7:
+			system("CLS");
+			cout << "Which teacher is in the team?";
+			showTeachers(teachers, teacherCount, teams, teamCount);
+			cout << "which ID?";
+			int TeacherID;
+			cin >> TeacherID;
+			TEACHERS teach = getTeacher(teachers, teacherCount, TeacherID);
+			teach.hasTeam = true;
+			updateTeacher(teachers, teacherCount, TeacherID, teach);
+			editName.teamTeacher = teach;
+			updateTeam(teams, teamCount, editedId, editName);
+			break;
+
+		}
+	}
+	else
+	{
+		system("CLS");
+		cout << "There are no teams inserted yet. " << endl << endl
+			<< "You can insert some using the |Add a team| button of the menu." << endl << endl;
+	}
+}
+bool showTeamMenu(TEAMS* teams, int& teamCount, int& maxTeamID, TEACHERS* teachers, int& teacherCount, STUDENTS* students, int& studentCount)
+{
+
+	cout << "+-----------------+" << endl;
+	cout << "|--- TEAM MENU ---|" << endl;
+	cout << "+-----------------+" << endl;
+	cout << "|1.Show all teams |" << endl;
+	cout << "|2.Add a team     |" << endl;
+	cout << "|3.Edit a team    |" << endl;
+	cout << "|4.Delete a team  |" << endl;
+	cout << "|5.Exit Menu      |" << endl;
+	cout << "+-----------------+" << endl;
+
+	string levelChoice;
+	int choice;
+	cin >> levelChoice;
+	if (checkInteger(levelChoice) == false)
+	{
+		do {
+			system("CLS");
+			cout << "+---------------------------------------------------------------------+" << endl;
+			cout << "|The value you entered was not an integer. Please enter a whole number|" << endl;
+			cout << "+---------------------------------------------------------------------+" << endl;
+			cin >> levelChoice;
+			checkInteger(levelChoice);
+		} while (checkInteger(levelChoice) == false);
+	}
+	choice = stoi(levelChoice);
+
+	switch (choice)
+	{
+	case 1:
+		showTeams(teams, teamCount);
+		break;
+
+	case 2:
+		createTeamMenu(teams, teamCount, maxTeamID, teachers, teacherCount, students, studentCount);
+		break;
+
+	case 3:
+		editTeamMenu(teams, teamCount, teachers, teacherCount, students, studentCount);
+		break;
+	case 4:
+		deleteTeamMenu(teams, teamCount, students, studentCount, teachers, teacherCount);
+		break;
+	case 5:
+		return false;
+
+	default: break;
+		system("CLS");
+		cout << "The number you choose was not valid!" << endl;
+	}
+
+	return true;
+}
