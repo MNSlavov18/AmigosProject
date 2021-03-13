@@ -807,3 +807,397 @@ bool showTeamMenu(TEAMS* teams, int& teamCount, int& maxTeamID, TEACHERS* teache
 
 	return true;
 }
+
+void createSchoolMenu(SCHOOLS* schools, int& schoolCount, int& maxSchoolID, TEACHERS* teachers, int& teacherCount, STUDENTS* students, int& studentCount, TEAMS* teams, int& teamCount)
+{
+	system("CLS");
+	SCHOOLS addSchool;
+
+	cout << " name  ";
+	cin >> addSchool.schoolName;
+
+	cout << "city ";
+	cin >> addSchool.city;
+
+	cout << "address";
+	cin >> addSchool.address;
+	system("CLS");
+	int availableStudents = showStudentsNoSchool(students, studentCount);
+	if (availableStudents > 0)
+	{
+		cout << "how many of them study in this school?";
+		cin >> addSchool.studentsInSchoolNum;
+		if (addSchool.studentsInSchoolNum < 0 or addSchool.studentsInSchoolNum > availableStudents)
+		{
+			do {
+				cout << "invalid number, try again" << endl;
+				cin >> addSchool.studentsInSchoolNum;
+			} while (addSchool.studentsInSchoolNum < 0 or addSchool.studentsInSchoolNum > availableStudents);
+		}
+		showStudentsNoSchool(students, studentCount);
+		for (int i = 0; i < addSchool.studentsInSchoolNum; i++)
+		{
+			cout << "which ID?";
+			int editedId;
+			cin >> editedId;
+			STUDENTS tt = getStudent(students, studentCount, editedId);
+			tt.hasSchool = true;
+			updateStudent(students, studentCount, editedId, tt);
+			addSchool.studentsInSchool[i] = tt;
+		}
+	}
+	system("CLS");
+	int availableTeachers = showTeachersNoSchool(teachers, teacherCount, teams, teamCount);
+	if (availableTeachers > 0)
+	{
+		cout << "how many of them teach in this school?";
+		cin >> addSchool.teachersInSchoolNum;
+		if (addSchool.teachersInSchoolNum < 0 or addSchool.teachersInSchoolNum > availableStudents)
+		{
+			do {
+				cout << "invalid number, try again" << endl;
+				cin >> addSchool.teachersInSchoolNum;
+			} while (addSchool.teachersInSchoolNum < 0 or addSchool.teachersInSchoolNum > availableStudents);
+		}
+		for (int i = 0; i < addSchool.teachersInSchoolNum; i++)
+		{
+			cout << "which ID?";
+			int editedId2;
+			cin >> editedId2;
+
+			TEACHERS tt = getTeacher(teachers, teacherCount, editedId2);
+			tt.hasSchool = true;
+			updateTeacher(teachers, teacherCount, editedId2, tt);
+			addSchool.teachersInSchool[i] = tt;
+		}
+	}
+	system("CLS");
+	int availableTeams = showTeamsNoSchool(teams, teamCount);
+	if (availableTeams > 0)
+	{
+		cout << "how many teams learn in this school?";
+		cin >> addSchool.teamsInSchoolNum;
+		for (int i = 0; i < addSchool.teamsInSchoolNum; i++)
+		{
+			cout << "which ID?";
+			int editedId3;
+			cin >> editedId3;
+
+			TEAMS tt = getTeam(teams, teamCount, editedId3);
+			tt.hasSchool = true;
+			updateTeam(teams, teamCount, editedId3, tt);
+			addSchool.teamsInSchool[i] = tt;
+		}
+	}
+	system("CLS");
+	createSchool(schools, schoolCount, maxSchoolID, addSchool);
+}
+
+
+void showSchools(SCHOOLS* schools, int& schoolCount)
+{
+	system("CLS");
+	if (schoolCount > 0)
+	{
+		cout << "Here are all the schools so far : " << endl;
+	}
+	else
+	{
+		cout << "There are no schools inserted yet. " << endl << endl
+			<< "You can insert some using the |Add a school| button of the menu." << endl << endl;
+	}
+	for (int j = 0; j < schoolCount; j++)
+	{
+		cout << "ID : ";
+		cout << schools[j].schoolID << " | Name : "
+			<< schools[j].schoolName << " | City : "
+			<< schools[j].city << " | address: "
+			<< schools[j].address << " | teachers :";
+		cout << endl;
+		cout << "+--------+" << endl;
+		cout << "|Students|" << endl;
+		cout << "+--------+" << endl;
+		cout << endl;
+		for (int i = 0; i < schools[j].studentsInSchoolNum; i++)
+		{
+			cout << "ID : ";
+			cout << schools[j].studentsInSchool[i].studentID << " | Name : "
+				<< schools[j].studentsInSchool[i].name << " | surname : "
+				<< schools[j].studentsInSchool[i].surname << " | class: "
+				<< schools[j].studentsInSchool[i].studentClass << " | role: "
+				<< schools[j].studentsInSchool[i].role << " | email: "
+				<< schools[j].studentsInSchool[i].email;
+			cout << endl;
+		}
+		cout << endl;
+		cout << "+--------+" << endl;
+		cout << "|Teachers|" << endl;
+		cout << "+--------+" << endl;
+		cout << endl;
+		for (int i = 0; i < schools[j].teachersInSchoolNum; i++)
+		{
+			cout << "ID : ";
+			cout << schools[j].teachersInSchool[i].teacherID << " | Name : "
+				<< schools[j].teachersInSchool[i].teacherName << " | Subname : "
+				<< schools[j].teachersInSchool[i].teacherSubname << " | email: "
+				<< schools[j].teachersInSchool[i].teacherEmail;
+			cout << endl;
+		}
+		cout << endl;
+		cout << "+--------+" << endl;
+		cout << "| Teams  |" << endl;
+		cout << "+--------+" << endl;
+		cout << endl;
+		for (int i = 0; i < schools[j].teamsInSchoolNum; i++)
+		{
+			cout << "ID : ";
+			cout << schools[j].teamsInSchool[i].teamID << " | Name : "
+				<< schools[j].teamsInSchool[i].teamName << " | Description : "
+				<< schools[j].teamsInSchool[i].teamDescription << " | teacher: "
+				<< schools[j].teamsInSchool[i].teamTeacher.teacherName;
+			cout << endl;
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
+
+void deleteSchoolMenu(SCHOOLS* schools, int& schoolCount, STUDENTS* students, int& studentCount, TEACHERS* teachers, int& teacherCount, TEAMS* teams, int& teamCount)
+{
+	system("CLS");
+	if (schoolCount > 0)
+	{
+		int deleteSchoolID;
+		cout << "Enter the Id of the school you want to delete : ";
+		cin >> deleteSchoolID;
+		deleteSchool(schools, schoolCount, deleteSchoolID, students, studentCount, teachers, teacherCount, teams, teamCount);
+	}
+	else
+	{
+		cout << "There are no schools inserted yet. " << endl << endl
+			<< "You can insert some using the |Add a school| button of the menu." << endl << endl;
+	}
+}
+
+void editSchoolMenu(SCHOOLS* schools, int& schoolCount, TEACHERS* teachers, int& teacherCount, STUDENTS* students, int& studentCount, TEAMS* teams, int& teamCount)
+{
+	system("CLS");
+	if (schoolCount > 0)
+	{
+		int editedId;
+		cout << "Enter the ID of the school you want to change : ";
+		cin >> editedId;
+
+		SCHOOLS editSchool = getSchool(schools, schoolCount, editedId);
+		cout << "+--------------+" << endl;
+		cout << "|1.edit name   |" << endl;
+		cout << "|2.edit city   |" << endl;
+		cout << "|3.edit address|" << endl;
+		cout << "|4.Add people  |" << endl;
+		cout << "+--------------+" << endl;
+		string levelChoice;
+		int choice;
+		cin >> levelChoice;
+		if (checkInteger(levelChoice) == false)
+		{
+			do {
+				system("CLS");
+				cout << "+---------------------------------------------------------------------+" << endl;
+				cout << "|The value you entered was not an integer. Please enter a whole number|" << endl;
+				cout << "+---------------------------------------------------------------------+" << endl;
+				cin >> levelChoice;
+				checkInteger(levelChoice);
+			} while (checkInteger(levelChoice) == false);
+		}
+		choice = stoi(levelChoice);
+		switch (choice)
+		{
+		case 1:
+			system("CLS");
+			cout << " Choose a new school name : ";
+			cin >> editSchool.schoolName;
+			updateSchool(schools, schoolCount, editedId, editSchool);
+			break;
+
+		case 2:
+			system("CLS");
+			cout << "Choose a new school city: ";
+			cin >> editSchool.city;
+			updateSchool(schools, schoolCount, editedId, editSchool);
+			break;
+
+		case 3:
+			system("CLS");
+			cout << "Choose  a new school address : ";
+			cin >> editSchool.address;
+			updateSchool(schools, schoolCount, editedId, editSchool);
+			break;
+		case 4:
+			addPeopleMenu(schools, schoolCount, teachers, teacherCount, students, studentCount, teams, teamCount, editedId);
+			break;
+		default:
+			cout << "The number you choose was not valid!" << endl;
+			break;
+		}
+	}
+	else
+	{
+		cout << "There are no schools inserted yet. " << endl << endl
+			<< "You can insert some using the |Add a school| button of the menu." << endl << endl;
+	}
+}
+bool showSchoolMenu(SCHOOLS* schools, int& schoolCount, int& maxSchoolID, TEACHERS* teachers, int& teacherCount, STUDENTS* students, int& studentCount, TEAMS* teams, int& teamCount)
+{
+	cout << "+-------------------+" << endl;
+	cout << "|--- SCHOOL MENU ---|" << endl;
+	cout << "+-------------------+" << endl;
+	cout << "|1. Show all schools|" << endl;
+	cout << "|2. Add a school    |" << endl;
+	cout << "|3. Edit a school   |" << endl;
+	cout << "|4. Delete a school |" << endl;
+	cout << "|5. Exit menu       |" << endl;
+	cout << "+-------------------+" << endl;
+	string levelChoice;
+	int choice;
+	cin >> levelChoice;
+	if (checkInteger(levelChoice) == false)
+	{
+		do {
+			system("CLS");
+			cout << "+---------------------------------------------------------------------+" << endl;
+			cout << "|The value you entered was not an integer. Please enter a whole number|" << endl;
+			cout << "+---------------------------------------------------------------------+" << endl;
+			cin >> levelChoice;
+			checkInteger(levelChoice);
+		} while (checkInteger(levelChoice) == false);
+	}
+	choice = stoi(levelChoice);
+	switch (choice)
+	{
+	case 1:
+		showSchools(schools, schoolCount);
+		break;
+
+	case 2:
+		createSchoolMenu(schools, schoolCount, maxSchoolID, teachers, teacherCount, students, studentCount, teams, teamCount);
+		break;
+
+	case 3:
+		editSchoolMenu(schools, schoolCount, teachers, teacherCount, students, studentCount, teams, teamCount);
+		break;
+
+	case 4:
+		deleteSchoolMenu(schools, schoolCount, students, studentCount, teachers, teacherCount, teams, teamCount);
+		break;
+	case 5:
+		return false;
+
+	default: break;
+		cout << "The number you choose was not valid!" << endl;
+	}
+	return true;
+}
+
+void showStudentsNoTeam(STUDENTS* students, int& studentCount)
+{
+	system("CLS");
+	if (studentCount > 0)
+	{
+		for (int j = 0; j < studentCount; j++)
+		{
+			if (students[j].hasTeam == false)
+			{
+				cout << "ID : ";
+				cout << students[j].studentID << " | Name : "
+					<< students[j].name << " | surname : "
+					<< students[j].surname << " | class: "
+					<< students[j].studentClass << " | role: "
+					<< students[j].role << " | email: "
+					<< students[j].email << endl;
+			}
+		}
+		cout << endl;
+	}
+	else
+	{
+		cout << "There are no students inserted yet. " << endl << endl
+			<< "You can insert some using the |Add student| button of the menu." << endl << endl;
+	}
+}
+void showteachersNoTeam(TEACHERS* teachers, int& teacherCount)
+{
+	system("CLS");
+	if (teacherCount > 0)
+	{
+		for (int j = 0; j < teacherCount; j++)
+		{
+			if (teachers[j].hasTeam == false)
+			{
+				cout << "ID : ";
+				cout << teachers[j].teacherID << " | Name : "
+					<< teachers[j].teacherName << " | Subname : "
+					<< teachers[j].teacherSubname << " | email: "
+					<< teachers[j].teacherEmail << endl;
+			}
+		}
+		cout << endl;
+	}
+	else
+	{
+		cout << "There are no teachers inserted yet" << endl << endl;
+		cout << "You can insert some using the |Add teacher| button of the menu." << endl << endl;
+	}
+}
+
+bool showReportsMenu(SCHOOLS* schools, int& schoolCount, TEACHERS* teachers, int& teacherCount, STUDENTS* students, int& studentCount, TEAMS* teams, int& teamCount)
+{
+	cout << " --- REPORTS MENU ---" << endl;
+	cout << "1. Students without teams" << endl;
+	cout << "2. Teachers without a team" << endl;
+	cout << "3. Students without a school" << endl;
+	cout << "4. Teachers without a school" << endl;
+	cout << "5. Teams without a school" << endl;
+	cout << "6. Exit menu" << endl;
+	string levelChoice;
+	int choice;
+	cin >> levelChoice;
+	if (checkInteger(levelChoice) == false)
+	{
+		do {
+			system("CLS");
+			cout << "+---------------------------------------------------------------------+" << endl;
+			cout << "|The value you entered was not an integer. Please enter a whole number|" << endl;
+			cout << "+---------------------------------------------------------------------+" << endl;
+			cin >> levelChoice;
+			checkInteger(levelChoice);
+		} while (checkInteger(levelChoice) == false);
+	}
+	choice = stoi(levelChoice);
+	switch (choice)
+	{
+	case 1:
+		system("CLS");
+		showStudentsNoTeam(students, studentCount);
+		break;
+	case 2:
+		system("CLS");
+		showteachersNoTeam(teachers, teacherCount);
+		break;
+	case 3:
+		system("CLS");
+		showStudentsNoSchool(students, studentCount);
+		break;
+	case 4:
+		system("CLS");
+		showTeachersNoSchool(teachers, teacherCount, teams, teamCount);
+		break;
+	case 5:
+		system("CLS");
+		showTeamsNoSchool(teams, teamCount);
+		break;
+	case 6:
+		return false;
+		break;
+	}
+	return true;
+}
