@@ -13,3 +13,17 @@ bool checkInteger(string str)
 	}
 	return true;
 }
+
+int getIndexById(STUDENTS* students, int count, int ID)
+{
+
+	for (int j = 0; j < count; j++)
+	{
+		if (students[j].studentID == ID)
+		{
+			return j;
+		}
+
+	}
+	return -1;
+}
