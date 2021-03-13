@@ -49,3 +49,11 @@ struct SCHOOLS {
 	int teachersInSchoolNum = 0;
 	int teamsInSchoolNum = 0;
 };
+
+bool checkInteger(string str);
+int getIndexById(STUDENTS* students, int count, int ID);
+void createStudent(STUDENTS* students, int& studentCount, int& maxStudentID, STUDENTS  newStudent);
+void updateStudent(STUDENTS* students, int studentCount, int studentID, STUDENTS  newStudent);
+void deleteStudent(STUDENTS* students, int& studentCount, int studentID);
+STUDENTS getStudent(STUDENTS* students, int& studentCount, int studentID);
+bool checkAvailableStudents(STUDENTS* students, int& studentCount, string searchedRole);
