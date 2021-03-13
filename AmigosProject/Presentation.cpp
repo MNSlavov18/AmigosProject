@@ -1201,3 +1201,77 @@ bool showReportsMenu(SCHOOLS* schools, int& schoolCount, TEACHERS* teachers, int
 	}
 	return true;
 }
+
+bool mainMenu(SCHOOLS* schools, int& schoolCount, int& maxSchoolID, TEACHERS* teachers, int& teacherCount, int& maxTeacherID, STUDENTS* students, int& studentCount, int& maxStudentID, TEAMS* teams, int& teamCount, int& maxTeamID)
+{
+	system("CLS");
+	cout << "+-------------------+" << endl;
+	cout << "|--- MAIN   MENU ---|" << endl;
+	cout << "+-------------------+" << endl;
+	cout << "|1. students        |" << endl;
+	cout << "|2. teachers        |" << endl;
+	cout << "|3. teams           |" << endl;
+	cout << "|4. schools         |" << endl;
+	cout << "|5. show the reports|" << endl;
+	cout << "|6. exit            |" << endl;
+	cout << "+-------------------+" << endl;
+	string levelChoice;
+	int choice;
+	cin >> levelChoice;
+	if (checkInteger(levelChoice) == false)
+	{
+		do {
+			system("CLS");
+			cout << "+---------------------------------------------------------------------+" << endl;
+			cout << "|The value you entered was not an integer. Please enter a whole number|" << endl;
+			cout << "+---------------------------------------------------------------------+" << endl;
+			cin >> levelChoice;
+			checkInteger(levelChoice);
+		} while (checkInteger(levelChoice) == false);
+	}
+	choice = stoi(levelChoice);
+	bool doShowMenu;
+	switch (choice)
+	{
+	case 1:
+		system("CLS");
+		do {
+			doShowMenu = showStudentMenu(students, studentCount, maxStudentID);
+		} while (doShowMenu);
+		break;
+	case 2:
+		system("CLS");
+		do {
+			doShowMenu = showTeacherMenu(teachers, teacherCount, maxTeacherID, teams, teamCount);
+		} while (doShowMenu);
+		break;
+
+	case 3:
+		system("CLS");
+		do {
+			doShowMenu = showTeamMenu(teams, teamCount, maxTeamID, teachers, teacherCount, students, studentCount);
+		} while (doShowMenu);
+		break;
+
+	case 4:
+		system("CLS");
+		do {
+			doShowMenu = showSchoolMenu(schools, schoolCount, maxSchoolID, teachers, teacherCount, students, studentCount, teams, teamCount);
+		} while (doShowMenu);
+		break;
+	case 5:
+		system("CLS");
+		do {
+			doShowMenu = showReportsMenu(schools, schoolCount, teachers, teacherCount, students, studentCount, teams, teamCount);
+		} while (doShowMenu);
+		break;
+	case 6:
+		return false;
+
+	default:
+		break;
+		cout << "The number you choose was not valid!" << endl;
+	}
+
+	return true;
+}
