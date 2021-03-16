@@ -72,3 +72,4 @@ void createSchool(SCHOOLS* schools, int& schoolCount, int& maxSchoolID, SCHOOLS 
 void updateSchool(SCHOOLS* schools, int schoolCount, int schoolID, SCHOOLS newSchool);
 void deleteSchool(SCHOOLS* schools, int& schoolCount, int schoolID, STUDENTS* students, int studentCount, TEACHERS* teachers, int teacherCount, TEAMS* teams, int teamCount);
 SCHOOLS getSchool(SCHOOLS* schools, int& schoolCount, int schoolID);
+void addPeopleMenu(SCHOOLS* schools, int& schoolCount, TEACHERS* teachers, int& teacherCount, STUDENTS* students, int& studentCount, TEAMS* teams, int& teamCount, int editedId);
