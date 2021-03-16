@@ -12,7 +12,7 @@
 
 - Viktor Velizarov (Back-end developer)
 - Mario Slavov (Front-End Developer)
-- Kaloqn Dimov (Documentation)
+- Kaloqn Dimov (Scrum Trainer)
 - Viktor Kavaldjiev (QA Engineer)
 <a name="desc"></a>
 <h1 style="text-align:center;font-size:10vw">2.Short Description</h1>
