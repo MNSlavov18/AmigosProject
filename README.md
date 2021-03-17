@@ -12,8 +12,8 @@
 
 - Viktor Velizarov (Back-end developer)
 - Mario Slavov (Front-End Developer)
-- Kaloqn Dimov (Scrum Trainer)
-- Viktor Kavaldjiev (QA Engineer)
+- Kaloyan Dimov (Scrum Trainer)
+- Viktor Kavaldzhiev (QA Engineer)
 <a name="desc"></a>
 <h1 style="text-align:center;font-size:10vw">2.Short Description</h1>
 Our program's main job is to organize students and teachers in different teams and schools. The user can enter as much students and teachers as he wants and then create teams for them. He can also create schools to put the teams in. There are options to edit or delete any student, teacher, team or school. The user can also check some reports like which students dont have a school or which teachers dont have a team.
